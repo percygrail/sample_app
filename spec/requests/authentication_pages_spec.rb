@@ -14,6 +14,9 @@ describe "AuthenticationPages" do
   describe "signin" do
     before { visit signin_path }
 
+    it { should_not have_link('Profile')}
+    it { should_not have_link('Settings')}
+
     describe "with invalid information" do
       before { click_button "Sign in" }
 
@@ -107,6 +110,22 @@ describe "AuthenticationPages" do
 
       describe "submitting a DELETE request to the Users#destroy action" do
         before { delete user_path(user) }
+        specify { expect(response).to redirect_to(root_url) }
+      end
+    end
+
+    describe "for signed in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      before { sign_in user, no_capybara: true }
+
+      describe "using a 'new' action" do
+        before { get new_user_path }
+        specify { expect(response).to redirect_to(root_url) }
+      end
+
+      describe "using a 'create' action" do
+        let(:another_user) { FactoryGirl.create(:user) }
+        before { post users_path(another_user) }
         specify { expect(response).to redirect_to(root_url) }
       end
     end

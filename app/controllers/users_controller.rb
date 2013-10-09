@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :signed_in_user, only: [:index, :edit, :update, :destroy]
   before_action :correct_user, only: [:edit, :update]
   before_action :admin_user, only: :destroy
+  before_action :signed_out_user, only: [:new, :create]
 
   def index
     @users = User.paginate(page: params[:page])
@@ -45,6 +46,7 @@ class UsersController < ApplicationController
   end
 
   private
+
   def user_params
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
@@ -55,6 +57,12 @@ class UsersController < ApplicationController
     unless signed_in?
       store_location
       redirect_to signin_url, notice: "Please sign in."
+    end
+  end
+
+  def signed_out_user
+    if signed_in?
+      redirect_to root_url, notice: "Already signed up, Dude."
     end
   end
 
