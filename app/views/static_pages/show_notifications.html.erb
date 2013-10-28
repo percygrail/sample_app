@@ -1,0 +1,25 @@
+<%  provide(:title, @title) %>
+<%= javascript_tag do %>
+  $(document).ready(function() {
+  var $eventSource  = new EventSource("/notify");
+
+  $eventSource.addEventListener('TimeUpdate', function (e) {
+  document.getElementById("time").innerHTML=JSON.parse(e.data).time;
+  });
+
+  $eventSource.addEventListener('SecondsUpdate', function (e) {
+  document.getElementById("seconds").innerHTML=JSON.parse(e.data).seconds;
+  });
+
+  });
+<% end %>
+<div>
+  Time is:
+</div>
+<div id="time">
+</div>
+<div>
+  Seconds:
+</div>
+<div id="seconds">
+</div>

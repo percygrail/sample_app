@@ -3,8 +3,12 @@ SampleApp::Application.routes.draw do
   resources :users do
     member do
       get :following, :followers
+      get :notifications, :notify
     end
   end
+
+  #match '/notifications', to: 'static_pages#notifications', via: 'get'
+  #match '/notify', to: 'static_pages#notify', via: 'get'
 
   resources :sessions, only: [:new, :create, :destroy]
   resources :microposts, only: [:create, :destroy]

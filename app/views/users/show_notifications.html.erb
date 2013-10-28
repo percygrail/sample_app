@@ -1,0 +1,28 @@
+<%  provide(:title, @title) %>
+<%= javascript_tag do %>
+  $(document).ready(function() {
+  var $eventSource  = new EventSource("<%= notify_user_path(@user) %>");
+
+  $eventSource.addEventListener('following-update', function (e) {
+  document.getElementById("following").innerHTML=JSON.parse(e.data).following;
+  });
+
+  $eventSource.addEventListener('followers-update', function (e) {
+  document.getElementById("followers").innerHTML=JSON.parse(e.data).followers;
+  });
+
+  });
+<% end %>
+<div class="row">
+  <aside class="span4">
+    <section>
+      <%=	 gravatar_for @user %>
+      <h1><%=	 @user.name %></h1>
+      <span><%=	 link_to "view my profile", @user %></span>
+      <span><b>Microposts:</b> <%=	 @user.microposts.count %></span>
+    </section>
+    <section>
+      <%=	 render 'shared/stats' %>
+    </section>
+  </aside>
+</div>
